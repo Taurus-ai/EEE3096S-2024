@@ -112,7 +112,10 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-
+  uint8_t prevState0 = 0;
+  uint8_t prevState1 = 0;
+  uint8_t prevState2 = 0;
+  uint8_t prevState3 = 0;
   while (1)
   {
     /* USER CODE END WHILE */
@@ -121,12 +124,23 @@ int main(void)
 
     // TODO: Check pushbuttons to change timer delay
 
-
-
+	  uint8_t currentState0 = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
+	  uint8_t currentState1 = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1);
 
 		//frequency(1000) * delay - 1
+	  if (prevState0 == GPIO_PIN_RESET && currentState0 == GPIO_PIN_SET) {
+	          TIM16->ARR = 500 - 1;  // 0.5s delay
+	          HAL_Delay(100);  // debounce delay
+	      }
 
+	      // Check Pushbutton 1 (PA1) for 2s delay
+	      if (prevState1 == GPIO_PIN_RESET && currentState1 == GPIO_PIN_SET) {
+	          TIM16->ARR = 2000 - 1;  // 2s delay
+	          HAL_Delay(100);  // debounce delay
+	      }
 
+	      prevState0 = currentState0;
+	      prevState1 = currentState1;
 
   }
   /* USER CODE END 3 */
@@ -348,15 +362,25 @@ void TIM16_IRQHandler(void)
 
 	// TODO: Change LED pattern
 
+	static uint8_t currentIndex = 0x00;
 
+	if (resetSequence) {
+	        currentIndex = 0x00;  // Reset to start of the sequence
+	        resetSequence = 0;    // Clear the reset flag
+	    }
 
+	uint8_t valueRead = array[currentIndex];
 
 	// Write the binary value to the LEDs (PB0 to PB7)
-
+	GPIOB->ODR = (GPIOB->ODR & 0xFF00) | valueRead;
 
 	// Update the current index
-	// reset index to start of the array
-
+	currentIndex++;
+	if(currentIndex == ARRAY_LENGTH)
+	{
+		// reset index to start of the array
+		currentIndex = 0x00;
+	}
 
 
   
