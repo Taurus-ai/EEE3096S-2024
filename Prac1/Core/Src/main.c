@@ -45,6 +45,20 @@ TIM_HandleTypeDef htim16;
 /* USER CODE BEGIN PV */
 // TODO: Define input variables
 
+static uint8_t array[] = {
+		  0b11101001,
+		  0b11010010,
+		  0b10100100,
+		  0b01001000,
+		  0b10010000,
+		  0b00100000,
+		  0b01000000,
+		  0b10000000,
+		  0b00000000
+		};
+int ARRAY_LENGTH = 9;
+
+uint8_t resetSequence = 0;
 
 /* USER CODE END PV */
 
@@ -91,11 +105,14 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   // TODO: Start timer TIM16
+  HAL_TIM_Base_Start_IT(&htim16);
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+
   while (1)
   {
     /* USER CODE END WHILE */
@@ -103,8 +120,13 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
     // TODO: Check pushbuttons to change timer delay
-    
-    
+
+
+
+
+		//frequency(1000) * delay - 1
+
+
 
   }
   /* USER CODE END 3 */
@@ -325,7 +347,17 @@ void TIM16_IRQHandler(void)
 	HAL_TIM_IRQHandler(&htim16);
 
 	// TODO: Change LED pattern
-	// print something
+
+
+
+
+	// Write the binary value to the LEDs (PB0 to PB7)
+
+
+	// Update the current index
+	// reset index to start of the array
+
+
 
   
 }
