@@ -126,6 +126,9 @@ int main(void)
 
 	  uint8_t currentState0 = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
 	  uint8_t currentState1 = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1);
+	  uint8_t currentState2 = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2);
+	  uint8_t currentState3 = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_3);
+
 
 		//frequency(1000) * delay - 1
 	  if (prevState0 == GPIO_PIN_RESET && currentState0 == GPIO_PIN_SET) {
@@ -139,8 +142,22 @@ int main(void)
 	          HAL_Delay(100);  // debounce delay
 	      }
 
+	      // Check Pushbutton 2 (PA2) for 1s delay
+	      if (prevState2 == GPIO_PIN_RESET && currentState2 == GPIO_PIN_SET) {
+	          TIM16->ARR = 1000 - 1;  // 1s delay
+	          HAL_Delay(100);  // debounce delay
+	      }
+
+	      if (prevState3 == GPIO_PIN_RESET && currentState3 == GPIO_PIN_SET) {
+	              resetSequence = 1;  // Set flag to reset sequence
+	              HAL_Delay(100);  // debounce delay
+	          }
+
 	      prevState0 = currentState0;
 	      prevState1 = currentState1;
+	      prevState2 = currentState2;
+	      prevState3 = currentState3;
+
 
   }
   /* USER CODE END 3 */
